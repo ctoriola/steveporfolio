@@ -135,4 +135,57 @@
     if (e.key === 'ArrowRight') show(idx + 1);
   });
   lb.addEventListener('close', function () { lbImg.removeAttribute('src'); });
+
+  /* ---------- Contact form ---------- */
+  var form = $('#contactForm');
+  var status = $('#formStatus');
+  var TO = 'rocksolidpixel@gmail.com';
+
+  function check(field) {
+    var input = $('input, textarea', field);
+    var msg = $('.err', field);
+    var v = input.value.trim();
+    var text = '';
+    if (!v) text = 'This field is required.';
+    else if (input.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) text = 'Please enter a valid email address.';
+    field.classList.toggle('invalid', !!text);
+    input.setAttribute('aria-invalid', text ? 'true' : 'false');
+    msg.textContent = text;
+    return !text;
+  }
+
+  function say(text, cls) { status.textContent = text; status.className = 'form-status ' + (cls || ''); }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var fields = $$('.field', form).filter(function (f) { return $('[required]', f); });
+    var ok = fields.map(check).every(Boolean);
+    if (!ok) { say('Please fix the highlighted fields.', 'bad'); $('.invalid input, .invalid textarea', form).focus(); return; }
+    if ($('.hp', form).value) return; /* honeypot: bots only */
+
+    var data = {
+      name: form.name.value.trim(),
+      email: form.email.value.trim(),
+      service: form.service.value,
+      message: form.message.value.trim()
+    };
+    var endpoint = form.dataset.endpoint;
+
+    if (endpoint) {
+      say('Sending...');
+      fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(data) })
+        .then(function (r) { if (!r.ok) throw new Error(r.status); form.reset(); say('Thanks! Your message has been sent. Steve will be in touch soon.', 'ok'); })
+        .catch(function () { say('Sorry, that did not send. Please email ' + TO + ' directly.', 'bad'); });
+      return;
+    }
+
+    var subject = 'Portfolio enquiry: ' + data.service + ' (' + data.name + ')';
+    var body = data.message + '\n\n- ' + data.name + '\n' + data.email;
+    window.location.href = 'mailto:' + TO + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    say('Opening your email app. If nothing opens, write to ' + TO + '.', 'ok');
+  });
+  $$('.field', form).forEach(function (f) {
+    var i = $('input, textarea', f);
+    if (i && i.required) i.addEventListener('blur', function () { check(f); });
+  });
 })();
