@@ -23,6 +23,6 @@ Publish the repo root on any static host (GitHub Pages, Netlify and so on).
 
 ## To do before launch
 
-- Confirm the education date range with Steve (the PDF says 2020–2022 but lists a 2023 degree; the site shows 2020 – 2023).
+- Confirm the education years with Steve (the PDF heading says 2020–2022 but lists a 2023 Masters; the site lists each degree with its own year).
 - Make `og:image` in `index.html` an absolute URL once the domain is known.
 - Replace the PDF-sourced images with higher-resolution originals if available.
