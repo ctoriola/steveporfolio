@@ -17,6 +17,7 @@ Publish the repo root on any static host (GitHub Pages, Netlify and so on).
 - `index.html`: all sections, plus the gallery markup (45 images)
 - `css/styles.css`: design tokens, layout and responsive rules
 - `js/main.js`: mobile menu, scroll reveal, gallery filters and lightbox
+- `assets/fonts/`: self-hosted Plus Jakarta Sans (no Google Fonts dependency)
 - `assets/images/`: optimised WebP images (`-600`/`-1200` widths) with the original JPGs as fallback
 - `PLAN.md`, `source/`: the build plan and source material
 
